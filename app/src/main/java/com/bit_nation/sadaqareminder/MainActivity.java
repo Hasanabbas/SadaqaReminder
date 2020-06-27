@@ -62,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
     private Button mRemoveAmountButton;
 
     /**
+     * A {@link Button} which references the button which removes the full amount due
+     */
+    private Button mRemoveAllAmountButton;
+
+    /**
      * An {@link EditText} which references the field where the user
      * can enter an amount to either add or remove from the amount due
      */
@@ -82,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
         mSadaqaAmountTextView = findViewById(R.id.sadaqa_amount_textView);
         mEnterAmountEditText = findViewById(R.id.enter_amount_editText);
         mRemoveAmountButton = findViewById(R.id.remove_amount_button);
+        mRemoveAllAmountButton = findViewById(R.id.remove_all_amount_button);
 
         // Set filer on the enter amount EditText
         mEnterAmountEditText.setFilters(new InputFilter[]{new DigitsInputFilter(MAX_DIGITS_BEFORE_DOT, MAX_DIGITS_AFTER_DOT, Double.MAX_VALUE)});
@@ -122,7 +128,9 @@ public class MainActivity extends AppCompatActivity {
      * @param view is a reference to the Add {@link Button} view
      */
     public void addAmount(View view) {
-        changeAmount(MODE_ADD);
+        // Parse the amount that has been entered in the EditText field and save it in a double variable
+        double amount = parseDouble(mEnterAmountEditText.getText().toString());
+        changeAmount(MODE_ADD, amount);
     }
 
     /**
@@ -131,20 +139,24 @@ public class MainActivity extends AppCompatActivity {
      * @param view is a reference to the Remove {@link Button} view
      */
     public void removeAmount(View view) {
-        changeAmount(MODE_REMOVE);
+        // Parse the amount that has been entered in the EditText field and save it in a variable
+        double amount = parseDouble(mEnterAmountEditText.getText().toString());
+        changeAmount(MODE_REMOVE, amount);
+    }
+
+    public void removeAllAmount(View view) {
+        changeAmount(MODE_REMOVE, mAmountDue);
     }
 
     /**
      * Helper method which handles both adding and removing to/from the amount due
      *
      * @param mode corresponds to which Button has been pressed
+     * @param amount to be added or removed
      */
-    public void changeAmount(int mode) {
-        // Parse the amount that has been entered in the EditText field and save it in a double variable
-        double value = parseDouble(mEnterAmountEditText.getText().toString());
-
+    public void changeAmount(int mode, double amount) {
         // If user entered 0 or nothing, don't do anything
-        if (value == 0.0) {
+        if (amount == 0.0) {
             return;
         }
 
@@ -152,20 +164,22 @@ public class MainActivity extends AppCompatActivity {
         switch (mode) {
             case MODE_ADD:
                 // Add the value entered by the user to the amount due variable
-                mAmountDue += value;
-                // Enable the Remove Button since the amount due is positive
+                mAmountDue += amount;
+                // Enable the Remove and Remove All Buttons since the amount due is positive
                 mRemoveAmountButton.setEnabled(true);
+                mRemoveAllAmountButton.setEnabled(true);
                 break;
             case MODE_REMOVE:
-                // If the user is trying to remove more than the amount due
-                if (value >= mAmountDue) {
+                // If the user wants to remove more than the amount due
+                if (amount >= mAmountDue) {
                     // Set the amount due variable to 0
                     mAmountDue = 0;
-                    // Disable the Remove Button since there is no more amount due
+                    // Disable the Remove and Remove All Buttons since there is no more amount due
                     mRemoveAmountButton.setEnabled(false);
+                    mRemoveAllAmountButton.setEnabled(false);
                 } else {
                     // Minus the amount entered to the amount due variable
-                    mAmountDue -= value;
+                    mAmountDue -= amount;
                 }
                 break;
         }

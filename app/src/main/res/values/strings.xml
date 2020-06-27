@@ -1,7 +1,20 @@
 <resources>
+    <!-- Name of the app -->
     <string name="app_name">Sadaqa Reminder</string>
+
+    <!-- Text displayed above the amount due -->
     <string name="amount_due">Amount Due</string>
+
+    <!-- Text for the Enter Amount EditText -->
     <string name="add_remove_amount">Enter amount</string>
+
+    <!-- Text for the Add Button -->
     <string name="submit_add">Add</string>
+
+    <!-- Text for the Remove Button -->
     <string name="submit_remove">Remove</string>
+
+    <!-- Text for the Remove All Button -->
+    <string name="submit_remove_all">Remove All</string>
+
 </resources>
